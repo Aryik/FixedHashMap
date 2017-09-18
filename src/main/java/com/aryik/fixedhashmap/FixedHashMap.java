@@ -50,7 +50,7 @@ public class FixedHashMap {
             // if length == size-1 the map is full
             return false;
         } else {
-            int hashCode = key.hashCode();
+            int hashCode = Math.abs(key.hashCode()) % size;
             if (hashMap[hashCode] == null) {
                 // No collision. Initialize a new node and increment length
                 hashMap[hashCode] = new Node(key, value, null);
