@@ -161,4 +161,55 @@ class FixedHashMapTest extends Specification {
             hashMap.get(3000.toString()) == "3000"
             hashMap.get(5.toString()) == null
     }
+
+    def "Deleting a nonexistent key returns null"() {
+        given:
+            FixedHashMap hashMap = new FixedHashMap()
+        when:
+            def deletion = hashMap.delete("key")
+        then:
+            deletion == null
+            notThrown(Exception)
+    }
+
+    def "Deleting an object succeeds"() {
+        given:
+            FixedHashMap hashMap = new FixedHashMap()
+        when:
+            hashMap.set("key", "value")
+        then:
+            hashMap.delete("key") == "value"
+            hashMap.get("key") == null
+    }
+
+    def "Deleting an object succeeds with a collision"() {
+        given:
+            FixedHashMap hashMap = new FixedHashMap(2)
+        when:
+        // Collisions in hash codes were found by trial and error. If the hashing function changes, this test will
+        // have to change.
+            hashMap.set(30.toString(), "30")
+            hashMap.set(100.toString(), "100")
+        then:
+            hashMap.delete(30.toString()) == "30"
+            hashMap.delete(100.toString()) == "100"
+            hashMap.get(30.toString()) == null
+            hashMap.get(100.toString()) == null
+    }
+
+    def "Traverse a linked list to delete a nonexistent key"() {
+        given:
+            FixedHashMap hashMap = new FixedHashMap(3)
+        when:
+        // Collisions in hash codes were found by trial and error. If the hashing function changes, this test will
+        // have to change. The collisions are not guaranteed if the size of the hash map is changed.
+            hashMap.set(30.toString(), "30")
+            hashMap.set(3000.toString(), "3000")
+        then:
+            hashMap.delete(5.toString()) == null
+            hashMap.delete(30.toString()) == "30"
+            hashMap.delete(3000.toString()) == "3000"
+            hashMap.get(30.toString()) == null
+            hashMap.get(3000.toString()) == null
+    }
 }

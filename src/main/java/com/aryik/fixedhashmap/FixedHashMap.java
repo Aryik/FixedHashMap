@@ -117,6 +117,41 @@ public class FixedHashMap {
         }
     }
 
+    public Object delete(String key) {
+        int hashCode = hash(key);
+        if (hashMap[hashCode] == null) {
+            return null;
+        } else {
+            Node node = hashMap[hashCode];
+            if (node.key.equals(key)) {
+                if (node.hasNext()) {
+                    hashMap[hashCode] = node.next;
+                    --length;
+                    return node.value;
+                } else {
+                    hashMap[hashCode] = null;
+                    --length;
+                    return node.value;
+                }
+            }
+            while (node.hasNext()) {
+                Node previous = node;
+                node = node.next;
+                if (node.key.equals(key)) {
+                    if (node.hasNext()) {
+                        previous.next = node.next;
+                        --length;
+                        return node.value;
+                    } else {
+                        previous.next = null;
+                        --length;
+                        return node.value;
+                    }
+                }
+            }
+            return null;
+        }
+    }
     private int hash(String key) {
         // Utility function to make it easier to change hashing functions in the future.
 //        System.out.println(key + "\t\t" + Math.abs(key.hashCode()) % capacity);
