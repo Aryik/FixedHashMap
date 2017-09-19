@@ -8,6 +8,9 @@ public class FixedHashMap {
     // The total number of objects allowed in the map.
     private final int size;
 
+    // The size of the hashMap array.
+    private final int capacity;
+
     // The number of objects stored in the map.
     private int length;
     private Node[] hashMap;
@@ -34,7 +37,9 @@ public class FixedHashMap {
 
     public FixedHashMap(int size) {
         this.size = size;
-        hashMap = new Node[size]; // How big should this array be?
+        // Set the capacity to the closest power of 2
+        capacity = size << 1;
+        hashMap = new Node[capacity]; // How big should this array be?
     }
 
     public FixedHashMap() {
@@ -46,11 +51,11 @@ public class FixedHashMap {
     }
 
     public boolean set(String key, Object value) {
-        if (length == size - 1) {
-            // if length == size-1 the map is full
+        if (length == size) {
+            // if length == size the map is full
             return false;
         } else {
-            int hashCode = Math.abs(key.hashCode()) % size;
+            int hashCode = hash(key);
             if (hashMap[hashCode] == null) {
                 // No collision. Initialize a new node and increment length
                 hashMap[hashCode] = new Node(key, value, null);
@@ -74,5 +79,33 @@ public class FixedHashMap {
                 return true;
             }
         }
+    }
+
+    public Object get(String key) {
+        int hashCode = hash(key);
+        if (hashMap[hashCode] == null) {
+            return null;
+        } else {
+            Node node = hashMap[hashCode];
+            if (node.key.equals(key)) {
+                return node.value;
+            } else {
+                while (true) {
+                    if (node.key.equals(key)) {
+                        return node.value;
+                    } else if (node.hasNext()) {
+                        node = node.next;
+                    } else {
+                        return null;
+                    }
+                }
+            }
+        }
+    }
+
+    private int hash(String key) {
+        // Utility function to make it easier to change hashing functions in the future.
+        System.out.println(key + "\t\t" + Math.abs(key.hashCode()) % capacity);
+        return Math.abs(key.hashCode()) % capacity;
     }
 }

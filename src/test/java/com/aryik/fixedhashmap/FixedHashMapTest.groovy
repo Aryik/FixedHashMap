@@ -55,4 +55,65 @@ class FixedHashMapTest extends Specification {
             test1 && test2
             notThrown(Exception)
     }
+
+    def "Setting fails when the size is zero"() {
+        given:
+            FixedHashMap hashMap = new FixedHashMap(0)
+        when:
+            def test = hashMap.set("key", "value")
+        then:
+            !test
+    }
+
+    def "Setting fails when the size is exceeded"() {
+        given:
+            FixedHashMap hashMap = new FixedHashMap(2)
+        when:
+            def test1 = hashMap.set("a key", "a value")
+            def test2 = hashMap.set("a different key", "and a different value")
+            def test3 = hashMap.set("the last key", "and the last value")
+        then:
+            test1
+            test2
+            !test3
+    }
+
+    def "Getting an unset key returns null"() {
+        given:
+            FixedHashMap hashMap = new FixedHashMap(5)
+        when:
+            def unset = hashMap.get("key")
+        then:
+            unset == null
+    }
+
+    def "Get and set an object"() {
+        given:
+            FixedHashMap hashMap = new FixedHashMap()
+        when:
+            hashMap.set("key", "value")
+        then:
+            hashMap.get("key") == "value"
+    }
+
+    def "Get a rewritten object"() {
+        given:
+            FixedHashMap hashMap = new FixedHashMap()
+        when:
+            hashMap.set("key", "value")
+            hashMap.set("key", "new value")
+        then:
+            hashMap.get("key") == "new value"
+    }
+
+    def "Setting works in the event of collisions"() {
+        given:
+            FixedHashMap hashMap = new FixedHashMap(2)
+        when:
+            hashMap.set(30.toString(), "10")
+            hashMap.set(100.toString(), "20")
+        then:
+            hashMap.get(30.toString()) == "10"
+            hashMap.get(100.toString()) == "20"
+    }
 }
