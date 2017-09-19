@@ -37,9 +37,15 @@ public class FixedHashMap {
 
     public FixedHashMap(int size) {
         this.size = size;
-        // Set the capacity to the closest power of 2
-        capacity = size << 1;
+        // Set the capacity to the next largest power of 2 to ensure that our hash does not ever run into divide by
+        // zero exceptions.
+        int capacity = 1;
+        while (capacity < size) {
+            capacity <<= 1;
+        }
+        this.capacity = capacity;
         hashMap = new Node[capacity]; // How big should this array be?
+//        System.out.println("capacity: " + capacity + " \t\t size: " + size);
     }
 
     public FixedHashMap() {
@@ -51,32 +57,40 @@ public class FixedHashMap {
     }
 
     public boolean set(String key, Object value) {
-        if (length == size) {
-            // if length == size the map is full
-            return false;
-        } else {
-            int hashCode = hash(key);
-            if (hashMap[hashCode] == null) {
+        int hashCode = hash(key);
+        if (hashMap[hashCode] == null) {
+            if (length < size) {
+                // We cannot replace the nested if statements with && because if hashMap[hashCode] != null we want
+                // to deal with the collision but if length < size we want to return false.
                 // No collision. Initialize a new node and increment length
                 hashMap[hashCode] = new Node(key, value, null);
                 ++length;
                 return true;
             } else {
-                // A hashing collision occurred.
-                Node node = hashMap[hashCode];
-                while (node.hasNext()) {
-                    if (node.key.equals(key)) {
-                        // If the key already exists, overwrite the value.
-                        node.value = value;
-                        return true;
-                    }
+                return false;
+            }
+        } else {
+            // A hashing collision occurred.
+            Node node = hashMap[hashCode];
+            while (true) {
+                if (node.key.equals(key)) {
+                    // If the key already exists, overwrite the value. Don't increment or check length.
+                    node.value = value;
+                    return true;
+                } else if (node.hasNext()) {
                     node = node.next;
+                } else {
+                    break;
                 }
-                // The key does not already exist in the map
-                // Should I add this new Node at the beginning or the end of the linked list?
+            }
+            // The key does not already exist in the map
+            // Should I add this new Node at the beginning or the end of the linked list?
+            if (length < size) {
                 hashMap[hashCode] = new Node(key, value, hashMap[hashCode]);
                 ++length;
                 return true;
+            } else {
+                return false;
             }
         }
     }
@@ -105,7 +119,7 @@ public class FixedHashMap {
 
     private int hash(String key) {
         // Utility function to make it easier to change hashing functions in the future.
-        System.out.println(key + "\t\t" + Math.abs(key.hashCode()) % capacity);
+//        System.out.println(key + "\t\t" + Math.abs(key.hashCode()) % capacity);
         return Math.abs(key.hashCode()) % capacity;
     }
 }

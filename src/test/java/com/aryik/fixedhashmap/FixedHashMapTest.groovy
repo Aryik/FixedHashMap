@@ -106,14 +106,59 @@ class FixedHashMapTest extends Specification {
             hashMap.get("key") == "new value"
     }
 
-    def "Setting works in the event of collisions"() {
+    def "Collisions are properly handled"() {
         given:
             FixedHashMap hashMap = new FixedHashMap(2)
         when:
-            hashMap.set(30.toString(), "10")
-            hashMap.set(100.toString(), "20")
+            // Collisions in hash codes were found by trial and error. If the hashing function changes, this test will
+            // have to change.
+            hashMap.set(30.toString(), "30")
+            hashMap.set(100.toString(), "100")
         then:
-            hashMap.get(30.toString()) == "10"
-            hashMap.get(100.toString()) == "20"
+            hashMap.get(30.toString()) == "30"
+            hashMap.get(100.toString()) == "100"
+    }
+
+    def "Setting and getting with multiple collisions works"() {
+        given:
+            FixedHashMap hashMap = new FixedHashMap(3)
+        when:
+            // Collisions in hash codes were found by trial and error. If the hashing function changes, this test will
+            // have to change. The collisions are not guaranteed if the size of the hash map is changed.
+            hashMap.set(30.toString(), "30")
+            hashMap.set(3000.toString(), "3000")
+            hashMap.set(5.toString(), "5")
+        then:
+            hashMap.get(30.toString()) == "30"
+            hashMap.get(3000.toString()) == "3000"
+            hashMap.get(5.toString()) == "5"
+    }
+
+    def "Overwrite a key after a collision"() {
+        given:
+            FixedHashMap hashMap = new FixedHashMap(2)
+        when:
+        // Collisions in hash codes were found by trial and error. If the hashing function changes, this test will
+        // have to change.
+            hashMap.set(30.toString(), "30")
+            hashMap.set(100.toString(), "100")
+            hashMap.set(30.toString(), "thirty")
+        then:
+            hashMap.get(30.toString()) == "thirty"
+            hashMap.get(100.toString()) == "100"
+    }
+
+    def "Traverse a linked list to retrieve a nonexistent key"() {
+        given:
+            FixedHashMap hashMap = new FixedHashMap(3)
+        when:
+        // Collisions in hash codes were found by trial and error. If the hashing function changes, this test will
+        // have to change. The collisions are not guaranteed if the size of the hash map is changed.
+            hashMap.set(30.toString(), "30")
+            hashMap.set(3000.toString(), "3000")
+        then:
+            hashMap.get(30.toString()) == "30"
+            hashMap.get(3000.toString()) == "3000"
+            hashMap.get(5.toString()) == null
     }
 }
