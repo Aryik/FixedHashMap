@@ -220,6 +220,37 @@ class FixedHashMapTest extends Specification {
             hashMap.get(3000.toString()) == null
     }
 
+    def "Delete a key from the beginning of a bucket's linked list"() {
+        given:
+            FixedHashMap hashMap = new FixedHashMap(2)
+        when:
+        // Collisions in hash codes were found by trial and error. If the hashing function changes, this test will
+        // have to change.
+            hashMap.set(30.toString(), "30")
+            hashMap.set(100.toString(), "100")
+        then:
+        // The last element to be added to the bucket is put at the beginning of the linked list
+        hashMap.delete(100.toString()) == "100"
+        hashMap.get(30.toString()) == "30"
+        hashMap.get(100.toString()) == null
+    }
+
+    def "Delete the middle key from a bucket's linked list"() {
+        given:
+            FixedHashMap hashMap = new FixedHashMap(3)
+        when:
+        // Collisions in hash codes were found by trial and error. If the hashing function changes, this test will
+        // have to change. The collisions are not guaranteed if the size of the hash map is changed.
+            hashMap.set(5.toString(), "5")
+            hashMap.set(30.toString(), "30")
+            hashMap.set(3000.toString(), "3000")
+        then:
+            hashMap.delete(30.toString()) == "30"
+            hashMap.get(3000.toString()) == "3000"
+            hashMap.get(5.toString()) == "5"
+            hashMap.get(30.toString()) == null
+    }
+
     def "Determine the load when size is 0"() {
         given:
             FixedHashMap hashMap = new FixedHashMap(0)

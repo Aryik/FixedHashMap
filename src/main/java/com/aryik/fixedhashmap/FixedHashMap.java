@@ -35,7 +35,7 @@ public class FixedHashMap {
         }
     }
 
-    public FixedHashMap(int size) throws NegativeArraySizeException{
+    public FixedHashMap(int size) throws NegativeArraySizeException {
         if (size < 0) {
             throw new NegativeArraySizeException();
         }
@@ -136,23 +136,24 @@ public class FixedHashMap {
                     --length;
                     return node.value;
                 }
-            }
-            while (node.hasNext()) {
-                Node previous = node;
-                node = node.next;
-                if (node.key.equals(key)) {
-                    if (node.hasNext()) {
-                        previous.next = node.next;
-                        --length;
-                        return node.value;
-                    } else {
-                        previous.next = null;
-                        --length;
-                        return node.value;
+            } else {
+                while (node.hasNext()) {
+                    Node previous = node;
+                    node = node.next;
+                    if (node.key.equals(key)) {
+                        if (node.hasNext()) {
+                            previous.next = node.next;
+                            --length;
+                            return node.value;
+                        } else {
+                            previous.next = null;
+                            --length;
+                            return node.value;
+                        }
                     }
                 }
+                return null;
             }
-            return null;
         }
     }
 
