@@ -24,6 +24,13 @@ class FixedHashMapTest extends Specification {
             hashMap.getSize() == 10
     }
 
+    def "A negative size is not allowed"() {
+        when:
+            FixedHashMap hashMap = new FixedHashMap(-5)
+        then:
+            thrown(NegativeArraySizeException)
+    }
+
     def "Setting a simple object succeeds"() {
         given:
             FixedHashMap hashMap = new FixedHashMap()
@@ -211,5 +218,36 @@ class FixedHashMapTest extends Specification {
             hashMap.delete(3000.toString()) == "3000"
             hashMap.get(30.toString()) == null
             hashMap.get(3000.toString()) == null
+    }
+
+    def "Determine the load when size is 0"() {
+        given:
+            FixedHashMap hashMap = new FixedHashMap(0)
+        when:
+            def load = hashMap.load()
+        then:
+            load == 0.0f
+            notThrown(ArithmeticException)
+    }
+
+    def "Determine the load when no items are in the map"() {
+        given:
+            FixedHashMap hashMap = new FixedHashMap(5)
+        when:
+            def load = hashMap.load()
+        then:
+            load == 0.0f
+    }
+
+    def "Determine the load normally"() {
+        given:
+            FixedHashMap hashMap = new FixedHashMap(10)
+        when:
+            hashMap.set("key", "value")
+            hashMap.set("key2", "value2")
+            hashMap.set("key3", "value3")
+            def load = hashMap.load()
+        then:
+            load == 0.3f
     }
 }

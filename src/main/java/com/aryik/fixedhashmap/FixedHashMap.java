@@ -35,7 +35,10 @@ public class FixedHashMap {
         }
     }
 
-    public FixedHashMap(int size) {
+    public FixedHashMap(int size) throws NegativeArraySizeException{
+        if (size < 0) {
+            throw new NegativeArraySizeException();
+        }
         this.size = size;
         // Set the capacity to the next largest power of 2 to ensure that our hash does not ever run into divide by
         // zero exceptions.
@@ -48,7 +51,7 @@ public class FixedHashMap {
 //        System.out.println("capacity: " + capacity + " \t\t size: " + size);
     }
 
-    public FixedHashMap() {
+    public FixedHashMap() throws NegativeArraySizeException {
         this(10);
     }
 
@@ -152,6 +155,15 @@ public class FixedHashMap {
             return null;
         }
     }
+
+    public float load() {
+        if (size == 0) {
+            return 0.0f;
+        } else {
+            return (float) length / size;
+        }
+    }
+
     private int hash(String key) {
         // Utility function to make it easier to change hashing functions in the future.
 //        System.out.println(key + "\t\t" + Math.abs(key.hashCode()) % capacity);
