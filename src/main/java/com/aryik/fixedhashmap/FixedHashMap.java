@@ -35,6 +35,7 @@ public class FixedHashMap {
         }
     }
 
+    // Initialize a FixedHashMap of size size.
     public FixedHashMap(int size) throws NegativeArraySizeException {
         if (size < 0) {
             throw new NegativeArraySizeException();
@@ -47,10 +48,10 @@ public class FixedHashMap {
             capacity <<= 1;
         }
         this.capacity = capacity;
-        hashMap = new Node[capacity]; // How big should this array be?
-//        System.out.println("capacity: " + capacity + " \t\t size: " + size);
+        hashMap = new Node[capacity];
     }
 
+    // Convenience constructor. Initialize a FixedHashMap of size 10.
     public FixedHashMap() throws NegativeArraySizeException {
         this(10);
     }
@@ -59,6 +60,7 @@ public class FixedHashMap {
         return size;
     }
 
+    // Place a reference to the Object value in the map with key key.
     public boolean set(String key, Object value) {
         int hashCode = hash(key);
         if (hashMap[hashCode] == null) {
@@ -87,7 +89,6 @@ public class FixedHashMap {
                 }
             }
             // The key does not already exist in the map
-            // Should I add this new Node at the beginning or the end of the linked list?
             if (length < size) {
                 hashMap[hashCode] = new Node(key, value, hashMap[hashCode]);
                 ++length;
@@ -108,6 +109,9 @@ public class FixedHashMap {
                 return node.value;
             } else {
                 while (true) {
+                    // Loop through the linked list searching for key.
+                    // We use while (true) instead of while (node.hasNext()) to eliminate the special case that occurs
+                    // when the node has no next element.
                     if (node.key.equals(key)) {
                         return node.value;
                     } else if (node.hasNext()) {
@@ -120,6 +124,8 @@ public class FixedHashMap {
         }
     }
 
+    // Deletes the value with key key from the map and returns the object.
+    // If no such key exists, returns null.
     public Object delete(String key) {
         int hashCode = hash(key);
         if (hashMap[hashCode] == null) {
@@ -157,6 +163,7 @@ public class FixedHashMap {
         }
     }
 
+    // Returns the load factor of the hash map
     public float load() {
         if (size == 0) {
             return 0.0f;
@@ -167,7 +174,6 @@ public class FixedHashMap {
 
     private int hash(String key) {
         // Utility function to make it easier to change hashing functions in the future.
-//        System.out.println(key + "\t\t" + Math.abs(key.hashCode()) % capacity);
         return Math.abs(key.hashCode()) % capacity;
     }
 }
