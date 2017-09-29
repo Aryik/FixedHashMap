@@ -1,4 +1,5 @@
 package com.aryik.fixedhashmap
+
 import spock.lang.*
 
 /**
@@ -8,7 +9,7 @@ class FixedHashMapTest extends Specification {
 
     def "Simple initialization succeeds"() {
         when:
-            FixedHashMap hashMap = new FixedHashMap(10)
+            com.aryik.fixedhashmap.FixedHashMap hashMap = new com.aryik.fixedhashmap.FixedHashMap(10)
         then:
             notThrown(Exception)
             hashMap != null
@@ -17,7 +18,7 @@ class FixedHashMapTest extends Specification {
 
     def "Initialization without a size defaults to 10"() {
         when:
-            FixedHashMap hashMap = new FixedHashMap()
+            com.aryik.fixedhashmap.FixedHashMap hashMap = new com.aryik.fixedhashmap.FixedHashMap()
         then:
             notThrown(Exception)
             hashMap != null
@@ -26,14 +27,14 @@ class FixedHashMapTest extends Specification {
 
     def "A negative size is not allowed"() {
         when:
-            FixedHashMap hashMap = new FixedHashMap(-5)
+            com.aryik.fixedhashmap.FixedHashMap hashMap = new com.aryik.fixedhashmap.FixedHashMap(-5)
         then:
             thrown(NegativeArraySizeException)
     }
 
     def "Setting a simple object succeeds"() {
         given:
-            FixedHashMap hashMap = new FixedHashMap()
+            com.aryik.fixedhashmap.FixedHashMap hashMap = new com.aryik.fixedhashmap.FixedHashMap()
         when:
             def test = hashMap.set("a key", 10)
         then:
@@ -43,8 +44,8 @@ class FixedHashMapTest extends Specification {
 
     def "Setting a larger object succeeds"() {
         given:
-            FixedHashMap hashMap = new FixedHashMap()
-            Object object = new FixedHashMap()
+            com.aryik.fixedhashmap.FixedHashMap hashMap = new com.aryik.fixedhashmap.FixedHashMap()
+            Object object = new com.aryik.fixedhashmap.FixedHashMap()
         when:
             def test = hashMap.set("a different key", object)
         then:
@@ -54,7 +55,7 @@ class FixedHashMapTest extends Specification {
 
     def "Overwriting a key succeeds"() {
         given:
-            FixedHashMap hashMap = new FixedHashMap()
+            com.aryik.fixedhashmap.FixedHashMap hashMap = new com.aryik.fixedhashmap.FixedHashMap()
         when:
             def test1 = hashMap.set("A key", 50)
             def test2 = hashMap.set("A key", 10)
@@ -65,7 +66,7 @@ class FixedHashMapTest extends Specification {
 
     def "Setting fails when the size is zero"() {
         given:
-            FixedHashMap hashMap = new FixedHashMap(0)
+            com.aryik.fixedhashmap.FixedHashMap hashMap = new com.aryik.fixedhashmap.FixedHashMap(0)
         when:
             def test = hashMap.set("key", "value")
         then:
@@ -74,7 +75,7 @@ class FixedHashMapTest extends Specification {
 
     def "Setting fails when the size is exceeded"() {
         given:
-            FixedHashMap hashMap = new FixedHashMap(2)
+            com.aryik.fixedhashmap.FixedHashMap hashMap = new com.aryik.fixedhashmap.FixedHashMap(2)
         when:
             def test1 = hashMap.set("a key", "a value")
             def test2 = hashMap.set("a different key", "and a different value")
@@ -87,7 +88,7 @@ class FixedHashMapTest extends Specification {
 
     def "Getting an unset key returns null"() {
         given:
-            FixedHashMap hashMap = new FixedHashMap(5)
+            com.aryik.fixedhashmap.FixedHashMap hashMap = new com.aryik.fixedhashmap.FixedHashMap(5)
         when:
             def unset = hashMap.get("key")
         then:
@@ -96,7 +97,7 @@ class FixedHashMapTest extends Specification {
 
     def "Get and set an object"() {
         given:
-            FixedHashMap hashMap = new FixedHashMap()
+            com.aryik.fixedhashmap.FixedHashMap hashMap = new com.aryik.fixedhashmap.FixedHashMap()
         when:
             hashMap.set("key", "value")
         then:
@@ -105,7 +106,7 @@ class FixedHashMapTest extends Specification {
 
     def "Get a rewritten object"() {
         given:
-            FixedHashMap hashMap = new FixedHashMap()
+            com.aryik.fixedhashmap.FixedHashMap hashMap = new com.aryik.fixedhashmap.FixedHashMap()
         when:
             hashMap.set("key", "value")
             hashMap.set("key", "new value")
@@ -115,7 +116,7 @@ class FixedHashMapTest extends Specification {
 
     def "Collisions are properly handled"() {
         given:
-            FixedHashMap hashMap = new FixedHashMap(2)
+            com.aryik.fixedhashmap.FixedHashMap hashMap = new com.aryik.fixedhashmap.FixedHashMap(2)
         when:
             // Collisions in hash codes were found by trial and error. If the hashing function changes, this test will
             // have to change.
@@ -128,7 +129,7 @@ class FixedHashMapTest extends Specification {
 
     def "Setting and getting with multiple collisions works"() {
         given:
-            FixedHashMap hashMap = new FixedHashMap(3)
+            com.aryik.fixedhashmap.FixedHashMap hashMap = new com.aryik.fixedhashmap.FixedHashMap(3)
         when:
             // Collisions in hash codes were found by trial and error. If the hashing function changes, this test will
             // have to change. The collisions are not guaranteed if the size of the hash map is changed.
@@ -143,7 +144,7 @@ class FixedHashMapTest extends Specification {
 
     def "Overwrite a key after a collision"() {
         given:
-            FixedHashMap hashMap = new FixedHashMap(2)
+            com.aryik.fixedhashmap.FixedHashMap hashMap = new com.aryik.fixedhashmap.FixedHashMap(2)
         when:
         // Collisions in hash codes were found by trial and error. If the hashing function changes, this test will
         // have to change.
@@ -157,7 +158,7 @@ class FixedHashMapTest extends Specification {
 
     def "Traverse a linked list to retrieve a nonexistent key"() {
         given:
-            FixedHashMap hashMap = new FixedHashMap(3)
+            com.aryik.fixedhashmap.FixedHashMap hashMap = new com.aryik.fixedhashmap.FixedHashMap(3)
         when:
         // Collisions in hash codes were found by trial and error. If the hashing function changes, this test will
         // have to change. The collisions are not guaranteed if the size of the hash map is changed.
@@ -171,7 +172,7 @@ class FixedHashMapTest extends Specification {
 
     def "Deleting a nonexistent key returns null"() {
         given:
-            FixedHashMap hashMap = new FixedHashMap()
+            com.aryik.fixedhashmap.FixedHashMap hashMap = new com.aryik.fixedhashmap.FixedHashMap()
         when:
             def deletion = hashMap.delete("key")
         then:
@@ -181,7 +182,7 @@ class FixedHashMapTest extends Specification {
 
     def "Deleting an object succeeds"() {
         given:
-            FixedHashMap hashMap = new FixedHashMap()
+            com.aryik.fixedhashmap.FixedHashMap hashMap = new com.aryik.fixedhashmap.FixedHashMap()
         when:
             hashMap.set("key", "value")
         then:
@@ -191,7 +192,7 @@ class FixedHashMapTest extends Specification {
 
     def "Deleting an object succeeds with a collision"() {
         given:
-            FixedHashMap hashMap = new FixedHashMap(2)
+            com.aryik.fixedhashmap.FixedHashMap hashMap = new com.aryik.fixedhashmap.FixedHashMap(2)
         when:
         // Collisions in hash codes were found by trial and error. If the hashing function changes, this test will
         // have to change.
@@ -206,7 +207,7 @@ class FixedHashMapTest extends Specification {
 
     def "Traverse a linked list to delete a nonexistent key"() {
         given:
-            FixedHashMap hashMap = new FixedHashMap(3)
+            com.aryik.fixedhashmap.FixedHashMap hashMap = new com.aryik.fixedhashmap.FixedHashMap(3)
         when:
         // Collisions in hash codes were found by trial and error. If the hashing function changes, this test will
         // have to change. The collisions are not guaranteed if the size of the hash map is changed.
@@ -222,7 +223,7 @@ class FixedHashMapTest extends Specification {
 
     def "Delete a key from the beginning of a bucket's linked list"() {
         given:
-            FixedHashMap hashMap = new FixedHashMap(2)
+            com.aryik.fixedhashmap.FixedHashMap hashMap = new com.aryik.fixedhashmap.FixedHashMap(2)
         when:
         // Collisions in hash codes were found by trial and error. If the hashing function changes, this test will
         // have to change.
@@ -237,7 +238,7 @@ class FixedHashMapTest extends Specification {
 
     def "Delete the middle key from a bucket's linked list"() {
         given:
-            FixedHashMap hashMap = new FixedHashMap(3)
+            com.aryik.fixedhashmap.FixedHashMap hashMap = new com.aryik.fixedhashmap.FixedHashMap(3)
         when:
         // Collisions in hash codes were found by trial and error. If the hashing function changes, this test will
         // have to change. The collisions are not guaranteed if the size of the hash map is changed.
@@ -253,7 +254,7 @@ class FixedHashMapTest extends Specification {
 
     def "Determine the load when size is 0"() {
         given:
-            FixedHashMap hashMap = new FixedHashMap(0)
+            com.aryik.fixedhashmap.FixedHashMap hashMap = new com.aryik.fixedhashmap.FixedHashMap(0)
         when:
             def load = hashMap.load()
         then:
@@ -263,7 +264,7 @@ class FixedHashMapTest extends Specification {
 
     def "Determine the load when no items are in the map"() {
         given:
-            FixedHashMap hashMap = new FixedHashMap(5)
+            com.aryik.fixedhashmap.FixedHashMap hashMap = new com.aryik.fixedhashmap.FixedHashMap(5)
         when:
             def load = hashMap.load()
         then:
@@ -272,7 +273,7 @@ class FixedHashMapTest extends Specification {
 
     def "Determine the load normally"() {
         given:
-            FixedHashMap hashMap = new FixedHashMap(10)
+            com.aryik.fixedhashmap.FixedHashMap hashMap = new com.aryik.fixedhashmap.FixedHashMap(10)
         when:
             hashMap.set("key", "value")
             hashMap.set("key2", "value2")
